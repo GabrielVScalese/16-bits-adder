@@ -1,0 +1,79 @@
+module fulladder (a, b, cin, s, cout);
+    input a, b, cin;
+    output s, cout;
+    
+    assign s = a ^ b ^ cin;
+    assign cout = (a & b) | (a & cin) | (b & cin);
+endmodule
+
+module addersubtractor (a, b, m, s, cout);
+    input [15:0] a, b;
+    input m;
+    output [15:0] s;
+    output cout;
+    
+    wire [15:0] x;
+    assign x[0] = b[0] ^ m;
+    assign x[1] = b[1] ^ m;
+    assign x[2] = b[2] ^ m;
+    assign x[3] = b[3] ^ m;
+    
+    assign x[4] = b[4] ^ m;
+    assign x[5] = b[5] ^ m;
+    assign x[6] = b[6] ^ m;
+    assign x[7] = b[7] ^ m;
+    
+    assign x[8] = b[8] ^ m;
+    assign x[9] = b[9] ^ m;
+    assign x[10] = b[10] ^ m;
+    assign x[11] = b[11] ^ m;
+
+    assign x[12] = b[12] ^ m;
+    assign x[13] = b[13] ^ m;
+    assign x[14] = b[14] ^ m;
+    assign x[15] = b[15] ^ m;
+    
+    
+    wire c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, c13, c14, c15, c16;
+    
+    fulladder fa0 (.a(a[0]), .b(x[0]), .cin(m), .s(s[0]), .cout(c1));
+    fulladder fa1 (.a(a[1]), .b(x[1]), .cin(c1), .s(s[1]), .cout(c2));
+    fulladder fa2 (.a(a[2]), .b(x[2]), .cin(c2), .s(s[2]), .cout(c3));
+    fulladder fa3 (.a(a[3]), .b(x[3]), .cin(c3), .s(s[3]), .cout(c4));
+    
+    fulladder fa4 (.a(a[4]), .b(x[4]), .cin(c4), .s(s[4]), .cout(c5));
+    fulladder fa5 (.a(a[5]), .b(x[5]), .cin(c5), .s(s[5]), .cout(c6));
+    fulladder fa6 (.a(a[6]), .b(x[6]), .cin(c6), .s(s[6]), .cout(c7));
+    fulladder fa7 (.a(a[7]), .b(x[7]), .cin(c7), .s(s[7]), .cout(c8));
+    
+    fulladder fa8 (.a(a[8]), .b(x[8]), .cin(c8), .s(s[8]), .cout(c9));
+    fulladder fa9 (.a(a[9]), .b(x[9]), .cin(c9), .s(s[9]), .cout(c10));
+    fulladder fa10 (.a(a[10]), .b(x[10]), .cin(c10), .s(s[10]), .cout(c11));
+    fulladder fa11 (.a(a[11]), .b(x[11]), .cin(c11), .s(s[11]), .cout(c12));
+    
+    fulladder fa12 (.a(a[12]), .b(x[12]), .cin(c12), .s(s[12]), .cout(c13));
+    fulladder fa13 (.a(a[13]), .b(x[13]), .cin(c13), .s(s[13]), .cout(c14));
+    fulladder fa14 (.a(a[14]), .b(x[14]), .cin(c14), .s(s[14]), .cout(c15));
+    fulladder fa15 (.a(a[15]), .b(x[15]), .cin(c15), .s(s[15]), .cout(cout));
+endmodule
+
+// Para testar os circuitos construidos
+module testbench ();
+    reg [15:0] a, b;
+    reg m;
+    wire [15:0] s;
+    wire cout;
+    addersubtractor as(.a(a), .b(b), .m(m), .s(s), .cout(cout));
+    initial begin
+        $monitor("%16b", s);
+        // Testando 457 + 897 = 1354
+        a = 16'd457;
+        b = 16'd897;
+        m = 0; // m = 0 -> soma
+        
+        // Testando 367 - 234 = 133
+        /*a = 16'd367;
+        b = 16'd234;
+        m = 1; // m = 1 -> subtracao*/
+    end
+endmodule
